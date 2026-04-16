@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>5以內減法隨機出題(無減0)-A4</title>
+    <style>
+        /* A4 列印設定 */
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+        @media print {
+            .no-print { display: none; }
+            body { background: white; padding: 0; }
+            .worksheet { border: none; box-shadow: none; width: 100%; margin-top: 0; }
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        /* 控制按鈕樣式 */
+        .no-print {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 12px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 10px;
+            border: none;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn-refresh { background-color: #007bff; }
+        .btn-print { background-color: #28a745; }
+        button:active { transform: translateY(2px); box-shadow: none; }
+
+        /* 學習單容器 */
+        .worksheet {
+            width: 210mm;
+            min-height: 280mm;
+            background: white;
+            padding: 15mm;
+            box-sizing: border-box;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .instruction {
+            background-color: #fff9c4;
+            border: 2px solid #fbc02d;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 19px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        /* 題目列容器 */
+        .problem-row {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 25px;
+            padding: 30px 0;
+            border-bottom: 2px dashed #ddd;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .num {
+            font-size: 72px;
+            font-weight: bold;
+            color: #222;
+            height: 80px;
+            display: flex;
+            align-items: center;
+        }
+
+        .sym {
+            font-size: 60px;
+            font-weight: bold;
+            color: #444;
+            margin-top: 15px;
+        }
+
+        /* 畫圖方框 */
+        .draw-box {
+            width: 150px;
+            height: 100px;
+            border: 3px solid #000;
+            border-radius: 15px;
+            background-color: #fff;
+        }
+
+        /* 答案框紅色標註 */
+        .ans-box {
+            border: 5px solid #d32f2f;
+            background-color: #fff8f8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print">
+        <button class="btn-refresh" onclick="generateProblems()">🔄 重新出新題目</button>
+        <button class="btn-print" onclick="window.print()">🖨️ 列印這頁練習單</button>
+    </div>
+
+    <div class="worksheet">
+        <div class="header">
+            <h1 style="margin: 0; font-size: 36px;">🍎 減法練習：畫一畫、數一數 🍎</h1>
+        </div>
+        
+        <div class="instruction">
+            <strong>【給學生的步驟指引】</strong><br>
+            1. 在數字下面畫圓圈 ○ <br>
+            2. 看到 <strong>-</strong> 就畫掉 <strong>X</strong>（劃掉右邊數字的量）<br>
+            3. 最後剩下的圓圈，畫在紅框裡。
+        </div>
+
+        <div id="problem-list">
+            </div>
+    </div>
+
+    <script>
+        function generateProblems() {
+            const container = document.getElementById('problem-list');
+            container.innerHTML = ''; 
+
+            for (let i = 0; i < 5; i++) {
+                // 被減數 a 為 2-5 (因為減數至少為1)
+                let a = Math.floor(Math.random() * 4) + 2; 
+                // 減數 b 為 1 到 a
+                let b = Math.floor(Math.random() * a) + 1; 
+
+                const row = document.createElement('div');
+                row.className = 'problem-row';
+                if (i === 4) row.style.borderBottom = 'none';
+
+                row.innerHTML = `
+                    <div class="column">
+                        <div class="num">${a}</div>
+                        <div class="draw-box"></div>
+                    </div>
+                    <div class="sym">-</div>
+                    <div class="column">
+                        <div class="num">${b}</div>
+                        <div class="draw-box"></div>
+                    </div>
+                    <div class="sym">=</div>
+                    <div class="column">
+                        <div class="num">?</div>
+                        <div class="ans-box draw-box"></div>
+                    </div>
+                `;
+                container.appendChild(row);
+            }
+        }
+
+        // 初始化
+        window.onload = generateProblems;
+    </script>
+</body>
+</html>
