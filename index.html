@@ -2,120 +2,126 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>5以內減法隨機出題(無減0)-A4</title>
+    <title>5以內減法隨機出題-A4單頁完美版</title>
     <style>
-        /* A4 列印設定 */
+        /* A4 列印精確控制 */
         @page {
             size: A4;
-            margin: 10mm;
+            margin: 0; /* 邊距交由 worksheet 控制 */
         }
         @media print {
-            .no-print { display: none; }
-            body { background: white; padding: 0; }
-            .worksheet { border: none; box-shadow: none; width: 100%; margin-top: 0; }
+            .no-print { display: none !important; }
+            body { background: white; padding: 0; margin: 0; overflow: hidden; }
+            .worksheet { 
+                box-shadow: none !important;
+                border: none !important;
+                width: 210mm;
+                height: 290mm; /* 稍微縮小，留出緩衝避免產生第二頁 */
+                padding: 10mm 15mm;
+                page-break-after: avoid; /* 強制不分頁 */
+            }
         }
 
         body {
-            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif;
+            font-family: "Microsoft JhengHei", sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #f4f4f4;
+            background-color: #f0f0f0;
             padding: 20px;
+            margin: 0;
         }
 
-        /* 控制按鈕樣式 */
         .no-print {
             display: flex;
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         button {
-            padding: 12px 30px;
-            font-size: 20px;
+            padding: 8px 18px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 10px;
+            border-radius: 6px;
             border: none;
             color: white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .btn-refresh { background-color: #007bff; }
         .btn-print { background-color: #28a745; }
-        button:active { transform: translateY(2px); box-shadow: none; }
 
-        /* 學習單容器 */
+        /* A4 容器 */
         .worksheet {
             width: 210mm;
-            min-height: 280mm;
+            height: 280mm; /* 鎖定高度，確保五題平分後不溢出 */
             background: white;
-            padding: 15mm;
             box-sizing: border-box;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 10mm 15mm;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 15px;
-            border-bottom: 3px solid #333;
-            padding-bottom: 10px;
+            margin-bottom: 5px;
+            border-bottom: 2px solid #000;
         }
 
         .instruction {
-            background-color: #fff9c4;
-            border: 2px solid #fbc02d;
-            border-radius: 10px;
-            padding: 12px;
-            font-size: 19px;
-            margin-bottom: 25px;
-            line-height: 1.6;
+            background-color: #fffde7;
+            border: 1.5px solid #fbc02d;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            line-height: 1.4;
         }
 
-        /* 題目列容器 */
+        #problem-list {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            justify-content: space-between; /* 自動均分垂直空間 */
+        }
+
         .problem-row {
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            gap: 25px;
-            padding: 30px 0;
-            border-bottom: 2px dashed #ddd;
+            align-items: center;
+            gap: 20px;
+            padding: 10px 0;
+            border-bottom: 1px dashed #ccc;
+            flex: 1; /* 每題佔據等高空間 */
         }
 
         .column {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
         }
 
         .num {
-            font-size: 72px;
+            font-size: 52px;
             font-weight: bold;
-            color: #222;
-            height: 80px;
-            display: flex;
-            align-items: center;
+            line-height: 1;
         }
 
         .sym {
-            font-size: 60px;
+            font-size: 40px;
             font-weight: bold;
-            color: #444;
-            margin-top: 15px;
         }
 
-        /* 畫圖方框 */
         .draw-box {
-            width: 150px;
-            height: 100px;
-            border: 3px solid #000;
-            border-radius: 15px;
+            width: 120px; 
+            height: 75px; 
+            border: 2.5px solid #000;
+            border-radius: 12px;
             background-color: #fff;
         }
 
-        /* 答案框紅色標註 */
         .ans-box {
-            border: 5px solid #d32f2f;
+            border: 3.5px solid #d32f2f;
             background-color: #fff8f8;
         }
     </style>
@@ -129,14 +135,12 @@
 
     <div class="worksheet">
         <div class="header">
-            <h1 style="margin: 0; font-size: 36px;">🍎 減法練習：畫一畫、數一數 🍎</h1>
+            <h1 style="margin: 5px 0; font-size: 26px;">🍎 減法練習：畫一畫、數一數 🍎</h1>
         </div>
         
         <div class="instruction">
             <strong>【給學生的步驟指引】</strong><br>
-            1. 在數字下面畫圓圈 ○ <br>
-            2. 看到 <strong>-</strong> 就畫掉 <strong>X</strong>（劃掉右邊數字的量）<br>
-            3. 最後剩下的圓圈，畫在紅框裡。
+            1. 在數字下面畫圓圈 ○ | 2. 看到 <strong>-</strong> 就畫掉 <strong>X</strong> | 3. 最後剩下的畫在紅框裡。
         </div>
 
         <div id="problem-list">
@@ -149,9 +153,7 @@
             container.innerHTML = ''; 
 
             for (let i = 0; i < 5; i++) {
-                // 被減數 a 為 2-5 (因為減數至少為1)
                 let a = Math.floor(Math.random() * 4) + 2; 
-                // 減數 b 為 1 到 a
                 let b = Math.floor(Math.random() * a) + 1; 
 
                 const row = document.createElement('div');
@@ -177,8 +179,6 @@
                 container.appendChild(row);
             }
         }
-
-        // 初始化
         window.onload = generateProblems;
     </script>
 </body>
