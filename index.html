@@ -2,12 +2,12 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>5以內減法隨機出題-A4單頁完美版</title>
+    <title>5以內減法隨機出題-無零版</title>
     <style>
         /* A4 列印精確控制 */
         @page {
             size: A4;
-            margin: 0; /* 邊距交由 worksheet 控制 */
+            margin: 0;
         }
         @media print {
             .no-print { display: none !important; }
@@ -16,9 +16,9 @@
                 box-shadow: none !important;
                 border: none !important;
                 width: 210mm;
-                height: 290mm; /* 稍微縮小，留出緩衝避免產生第二頁 */
+                height: 285mm; /* 稍微縮小高度緩衝，確保不產生第二頁 */
                 padding: 10mm 15mm;
-                page-break-after: avoid; /* 強制不分頁 */
+                page-break-after: avoid;
             }
         }
 
@@ -45,14 +45,14 @@
             border-radius: 6px;
             border: none;
             color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .btn-refresh { background-color: #007bff; }
         .btn-print { background-color: #28a745; }
 
-        /* A4 容器 */
         .worksheet {
             width: 210mm;
-            height: 280mm; /* 鎖定高度，確保五題平分後不溢出 */
+            height: 280mm; 
             background: white;
             box-sizing: border-box;
             display: flex;
@@ -81,7 +81,7 @@
             display: flex;
             flex-direction: column;
             flex: 1;
-            justify-content: space-between; /* 自動均分垂直空間 */
+            justify-content: space-between;
         }
 
         .problem-row {
@@ -91,7 +91,7 @@
             gap: 20px;
             padding: 10px 0;
             border-bottom: 1px dashed #ccc;
-            flex: 1; /* 每題佔據等高空間 */
+            flex: 1;
         }
 
         .column {
@@ -153,8 +153,11 @@
             container.innerHTML = ''; 
 
             for (let i = 0; i < 5; i++) {
+                // 邏輯修正：
+                // a (被減數) 為 2-5
+                // b (減數) 必須至少為 1，且必須小於 a (確保答案不為 0)
                 let a = Math.floor(Math.random() * 4) + 2; 
-                let b = Math.floor(Math.random() * a) + 1; 
+                let b = Math.floor(Math.random() * (a - 1)) + 1; 
 
                 const row = document.createElement('div');
                 row.className = 'problem-row';
